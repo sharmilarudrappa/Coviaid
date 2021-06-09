@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Covi Aid</title>
+    <!-- Load font awesome 5-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Load Jquery, Slick slider-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/slick-slide.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <section class="header">
+        <div class="top-nav">
+            <div class="logo">
+                <i class="fas fa-bars"></i>
+                
+    
+                <img src="images/logo-website.png" alt="logo-website" style="width:100px;height:60px;">
+            </div>
+            <div class="intro">
+               <!-- <div class="intro-icon">
+                    <h3 class="title">Ambulance Locator</h3>
+                    <span>Find an ambulance near to you</span>
+                </div>-->
+                <div class="intro-icon">
+                    <h3 class="title">Councelling sessions</h3>
+                    <span>Help to keep up mental health</span>
+                </div>
+                <div class="intro-icon">
+                    <h3 class="title">Vaccination</h3>
+                    <span>Check for vaccine availability</span>
+                </div>
+                <div class="intro-icon">
+                    <h3 class="title">Doctor</h3>
+                    <span>Contact Doctors</span>
+                </div>
+                
+
+            </div>
+            <div class="support">
+                <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_HJGlwL3oTMO0Xy" async> </script> </form>
+               <!-- <span><i class="fas fa-question-circle"></i>Support</span>
+           --> </div>
+        </div>
+
+        <div class="image-nav">
+            <div class="title-image">
+                LET'S FIGHT IT TOGETHER
+            </div>
+            <div class="btn-search">
+                <i class="fas fa-search"></i>
+                <input class="input-search" type="text" name="btnSearch" placeholder="Search here...">
+                
+            </div>
+            
+        </div>
+        <div class="bottom-nav">
+            <div class="bottom-item">
+                <i class="fas fa-syringe"></i>
+                <span>Vaccination Slots </span>
+            </div>
+            <div class="bottom-item">
+                <i class="fas fa-user-nurse"></i>
+                <span>Good doctor</span>
+            </div>
+            <div class="bottom-item">
+                <i class="far fa-clock"></i>
+                <span>Priority examination</span>
+            </div>
+        </div>
+    </section>
+    <!--
+    <section class="popular-specialty">
+        <div class="title-section">
+            <span class="span-title">Popular specialty</span>
+            <div class="btn-view ">
+                <a class="" href="/"> <span>ALL SPECIALITY </span></a>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="my-slick-slide">
+                <div class="div-slide">
+                    <div class="image-slide">
+                    </div>
+                    <div class="div-title">
+                        <span>H</span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide">
+                    </div>
+                    <div class="div-title">
+                        <span>Nerve</span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide">
+                    </div>
+                    <div class="div-title">
+                        <span>Digest</span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide">
+
+                    </div>
+                    <div class="div-title">
+                        <span>Traditional medicine</span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide">
+
+                    </div>
+                    <div class="div-title">
+                        <span>Acupuncture</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    -->
+<section class="vaccine">
+    <h2>Check your nearest vaccination center and slots availability</h2>
+    <div class="form-group">
+        <label for="pin">Search By Pin:</label>
+        <input type="number" maxlength="6" class="form-control" id="pin" placeholder="Enter pin" name="pin">
+    </div>
+    <br>
+    <br>
+
+    <button id="searchbtn" class="btn">Search</button>
+    <br>
+    <button id="searchbtn1" class="btn">Search By District</button>
+
+    <table class="table" id="session">
+        <br>
+        <br> <thead>
+            <tr>
+                <th>Name</th>
+                <th>Pin code</th>
+                <th>Date</th>
+                <th>18+</th>
+                <th>45+</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script>
+    var date = new Date();
+    var today = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+    $("#searchbtn").click(function () {
+        var pin = $('#pin').val();
+        if (pin == '' || pin == undefined) {
+            alert('please enter pin code');
+            return;
+        }
+        $.get("https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pin +
+            "&date=" + today,
+            function (data, status) {
+                if (status) {
+                    var sessions = data.sessions ? data.sessions : [];
+                    if (sessions) {
+                        for (var i = 0; i <= sessions.length; i++) {
+                            var classname = "info";
+                            if (i % 2 == 0) {
+                                classname = "success"
+                            }
+                            $('#session tbody').append("<tr class=" + classname + "><td>" + sessions[i]
+                                .name + "</td><td>" + sessions[i].pincode + "</td><td>" + sessions[i].date + "</td><td>" + sessions[i].available_capacity + "</td><td>" +
+                                sessions[i].available_capacity_dose1 + "</td></tr>")
+                        }
+                    }
+                } else {
+                    alert('error');
+                }
+
+            });
+    });
+
+    $("#searchbtn1").click(function () {
+        var district_id = "89";
+        $.get("https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=" +
+            district_id + "&date=" + today,
+            function (data, status) {
+                if (status) {
+                    var sessions = data.sessions ? data.sessions : [];
+                    if (sessions) {
+                        for (var i = 0; i <= sessions.length; i++) {
+                            var classname = "info";
+                            if (i % 2 == 0) {
+                                classname = "success"
+                            }
+
+                            $('#session tbody').append("<tr class=" + classname + "><td>" + sessions[i]
+                                .name + "</td><td>" + sessions[i].pincode + "</td><td>" + sessions[i].date + "</td><td>" + sessions[i].available_capacity + "</td><td>" +
+                                sessions[i].available_capacity_dose1 + "</td></tr>")
+                        }
+                    }
+                } else {
+                    alert('error');
+                }
+            });
+    });
+</script>
+</section>
+
+
+
+
+
+
+    <section class="hospital-and-clinic">
+        <div class="title-section">
+            <span class="span-title">Top hospitals & clinics</span>
+            <div class="btn-view ">
+                <a class="" href="/"> <span>ALL MEDICAL FACILITIES </span></a>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="my-slick-slide">
+                <div class="div-slide">
+                    <div class="image-slide1">
+                    </div>
+                    <div class="div-title">
+                        <span>Apollo Hospital</span>
+                        <span class="count-booking"><a href="tel:080- 46124444">+080- 46124444</a></span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide2">
+                    </div>
+                    <div class="div-title">
+                        <span>Sparsh Hospital</span>
+                        <span class="count-booking"><a href="tel:080 6114 1000">080 6114 1000</a></span>
+                        
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide3">
+                    </div>
+                    <div class="div-title">
+                        <span>Naryana Hrudayalaya</span>
+                        <span class="count-booking"><a href="tel:080 71112244">080 71112244</a></span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide4">
+
+                    </div>
+                    <div class="div-title">
+                        <span>St. Johns Hospital</span>
+                        <span class="count-booking"><a href="tel:+91 080 22065000">+91 080 22065000</a></span>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <div class="image-slide5">
+
+                    </div>
+                    <div class="div-title">
+                        <span>Gunam Hospital</span>
+                        <span class="count-booking"><a href="tel:080980 66066">080980 66066</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="doctors">
+        <div class="title-section">
+            <span class="span-title">Doctors for treatment</span>
+            <div class="btn-view ">
+                <a class="" href="/"> <span>ALL THE DOCTORS </span></a>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="my-slick-slide">
+                <div class="div-slide">
+                    <img src="images/speciality/a.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Swetha</span>
+                        <span class="speciality">Pediatrician</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: swetha@gmail.com">swetha@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/b.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Harsh</span>
+                        <span class="speciality">Neurologist</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: harsh@gmail.com">harsh@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/c.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Swayam bhat</span>
+                        <span class="speciality">Cardiologist</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: swayam@gmail.com">swayam@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/d.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr.Anupama Nair</span>
+                        <span class="speciality">Gynacologist</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: anupama@gmail.com">anupama@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/e.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Udbhav</span>
+                        <span class="speciality">Dentist</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: udbhav@gmail.com">udhbav@gmail.com</a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="councelling_doctors">
+        <div class="title-section">
+            <span class="span-title">Mental health</span>
+            <div class="btn-view ">
+                <a class="" href="/"> <span>ALL THE DOCTORS </span></a>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="my-slick-slide">
+                <div class="div-slide">
+                    <img src="images/speciality/x.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Surya</span>
+                        <span class="speciality">Banglore</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: surya@gmail.com">surya@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/y.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Mahima</span>
+                        <span class="speciality">Chennai</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: mahima@gmail.com">mahima@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/z.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Anish</span>
+                        <span class="speciality">Delhi</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: anish@gmail.com">anish@gmail.com</a></span>
+                </div>
+                <div class="div-slide">
+                    <img src="images/speciality/w.jpg" alt="image-doctors">
+                    <div class="info-doctor">
+                        <span class="name">Dr. Catherine</span>
+                        <span class="speciality">Mumbai</span>
+                    </div>
+                    <span class="count-booking"><a href = "mailto: catherine@gmail.com">catherine@gmail.com</a></span>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <section class="handbook">
+        <div class="title-section">
+            <span class="span-title" style="color: white;font-style:oblique; text-align:end;" >Stay Home Stay Safe</span>   
+        </div>
+        <div class="slide">
+            <div class="handbook-slide">
+                
+                <div class="div-slide">
+                    <div class="info-post">
+                        <span class="title-post" style="color: white;font-style: italic;text-align: top;" >Advices</span>
+                        <div class="summary-content" style="color: white;font-style: italic;">The vaccination programme is progressing well. Many people living and working in care homes, as well as adults in the priority groups, have now received both their vaccines. However, as the vaccine is not 100 per cent effective and it isn’t yet known how much it stops COVID-19 from spreading, it remains vital that everyone continues to follow the measures outlined in this guide and to adhere to the guidance on social distancing and wearing face coverings.</div>
+                        <div class="summary-content" style="color: white;font-style: italic;">If COVID-19 is spreading in your community, stay safe by taking some simple precautions, such as physical distancing, wearing a mask, keeping rooms well ventilated, avoiding crowds, cleaning your hands, and coughing into a bent elbow or tissue. Check local advice where you live and work. Do it all!</div>
+                        
+                    </div>
+                </div>
+                <!--<div class="div-slide">
+                    <img src="../images/speciality/speciality1.jpg" alt="image the post">
+                    <div class="info-post">
+                        <span class="title-post">My first post</span>
+                        <div class="summary-content">asdfasdf asdfl asfd lkasdfasdfasfd</div>
+                    </div>
+                </div>
+                <div class="div-slide">
+                    <img src="../images/speciality/speciality1.jpg" alt="image the post">
+                    <div class="info-post">
+                        <span class="title-post">My first post</span>
+                        <div class="summary-content">asdfasdf asdfl asfd lkasdfasdfasfd</div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </section>
+    
+    <section class="contact">
+        <div class="left-side">
+            <span class="title">We are in this together and we shall face it together</span>
+            <span class="second-title">The secret of change is to focus all of your energy, not on fighting the old, but on building the new.</span>
+            <span class="third-title"></span>
+        </div>
+        
+        <div class="right-side auto-resizable-iframe">
+            <div>
+                <iframe src="https://www.youtube.com/embed/qFkqDyT71rA"
+                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <img src="images/logo-website1.png" alt="logo-website" style="width:100px;height:60px;">
+        <span class="title">COVI AID</span>
+        <span>&copy;<a href="#">sharmi.rudrappa@gmail.com</a></span>
+    </footer>
+</div>
+</body>
+</html>
